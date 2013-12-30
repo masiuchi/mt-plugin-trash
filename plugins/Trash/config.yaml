@@ -1,0 +1,101 @@
+name: Trash
+version: 0.01
+schema_version: 0.1
+l10n_class: Trash::L10N
+
+author_name: masiuchi
+author_link: https://github.com/masiuchi
+plugin_link: https://github.com/masiuchi/mt-plugin-trash
+description: <__trans phrase="Trash for entries and pages.">
+
+object_types:
+    entry:
+        trash: boolean
+
+callbacks:
+    init_app: $Trash::Trash::Callback::init_app
+    cms_pre_load_filtered_list.entry: $Trash::Trash::Callback::pre_load_filtered_list_entry
+
+methods:
+    trash: $Trash::Trash::CMS::trash
+    restore_entry: $Trash::Trash::CMS::restore_entry
+    list_trash: $Trash::Trash::CMS::list_trash
+    filtered_list_trash:
+        code: $Trash::Trash::CMS::filtered_list_trash
+        app_mode: JSON
+
+applications:
+    cms:
+        callbacks:
+            template_source.list_common: $Trash::Trash::Callback::tmpl_src_list_common
+            template_param.list_common: $Trash::Trash::Callback::tmpl_param_list_common
+            template_source.entry_list_header: $Trash::Trash::Callback::tmpl_src_entry_list_header
+
+        menus:
+            entry:trash:
+                label: Trash
+                order: 150
+                mode: list_trash
+                args:
+                    _type: entry
+                view:
+                    - system
+                    - website
+                    - blog
+                condition: |
+                    sub {
+                        my $menus = MT->registry(qw( applications cms menus ));
+                        $menus->{'entry:manage'}{condition}->();
+                    }
+
+            page:trash:
+                label: Trash
+                order: 150
+                mode: list_trash
+                args:
+                    _type: page
+                view:
+                    - system
+                    - website
+                    - blog
+                condition: |
+                    sub {
+                        my $menus = MT->registry(qw( applications cms menus ));
+                        $menus->{'page:manage'}{condition}->();
+                    }
+
+        list_actions:
+            entry:
+                trash:
+                    label: Trash
+                    mode: trash
+                    order: 105
+                    js_message: trash
+                    button: 1
+                    condition: sub { MT->app->mode ne 'list_trash' }
+
+                restore_entry:
+                    label: Restore
+                    mode: restore_entry
+                    order: 104
+                    js_message: restore
+                    button: 1
+                    condition: sub { MT->app->mode eq 'list_trash' }
+
+            page:
+                trash:
+                    label: Trash
+                    mode: trash
+                    order: 105
+                    js_message: trash
+                    button: 1
+                    condition: sub { MT->app->mode ne 'list_trash' }
+
+                restore_page:
+                    label: Restore
+                    mode: restore_entry
+                    order: 104
+                    js_message: restore
+                    button: 1
+                    condition: sub { MT->app->mode eq 'list_trash' }
+
