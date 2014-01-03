@@ -57,8 +57,12 @@ sub restore_entry {
 
 sub list_trash {
     my $app = shift;
-    $app->forward( 'list',
-        { _type => $app->param('_type'), blog_id => $app->blog->id || 0 } );
+    $app->forward(
+        'list',
+        {   _type   => $app->param('_type'),
+            blog_id => $app->blog ? $app->blog->id : 0
+        }
+    );
 }
 
 sub filtered_list_trash {
