@@ -47,8 +47,8 @@ sub restore_entry {
         $app->uri(
             mode => 'list_trash',
             args => {
-                _type    => 'entry',
-                blog_id  => $app->blog->id || 0,
+                _type => $app->param('_type') || 'entry',
+                blog_id => $app->blog ? $app->blog->id : 0,
                 restored => 1,
             }
         )
