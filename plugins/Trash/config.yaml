@@ -14,6 +14,7 @@ object_types:
 
 callbacks:
     cms_pre_load_filtered_list.entry: $Trash::Trash::Callback::pre_load_filtered_list_entry
+    cms_pre_load_filtered_list.page: $Trash::Trash::Callback::pre_load_filtered_list_entry
 
 methods:
     trash: $Trash::Trash::CMS::trash
