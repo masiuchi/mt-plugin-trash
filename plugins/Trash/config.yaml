@@ -1,5 +1,5 @@
 name: Trash
-version: 0.03
+version: 0.04
 schema_version: 0.1
 l10n_class: Trash::L10N
 
