@@ -13,7 +13,6 @@ object_types:
         trash: boolean
 
 callbacks:
-    init_app: $Trash::Trash::Callback::init_app
     cms_pre_load_filtered_list.entry: $Trash::Trash::Callback::pre_load_filtered_list_entry
 
 methods:
@@ -27,6 +26,7 @@ methods:
 applications:
     cms:
         callbacks:
+            init_app: $Trash::Trash::Callback::init_app
             template_source.list_common: $Trash::Trash::Callback::tmpl_src_list_common
             template_param.list_common: $Trash::Trash::Callback::tmpl_param_list_common
             template_source.entry_list_header: $Trash::Trash::Callback::tmpl_src_entry_list_header

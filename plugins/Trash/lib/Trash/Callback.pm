@@ -3,6 +3,8 @@ use strict;
 use warnings;
 
 sub init_app {
+    return unless UNIVERSAL::isa( MT->app, 'MT::App::CMS' );
+
     my $list_actions = MT->registry(qw( applications cms list_actions ));
 
     foreach my $class (qw( entry page )) {
