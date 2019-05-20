@@ -15,7 +15,7 @@ sub trash {
 
     require MT::CMS::Entry;
     MT::CMS::Entry::update_entry_status( $app, MT::Entry::HOLD(),
-        $app->param('id') );
+        scalar $app->param('id') );
 }
 
 sub restore_entry {
@@ -47,8 +47,8 @@ sub restore_entry {
         $app->uri(
             mode => 'list_trash',
             args => {
-                _type => $app->param('_type') || 'entry',
-                blog_id => $app->blog ? $app->blog->id : 0,
+                _type    => $app->param('_type') || 'entry',
+                blog_id  => $app->blog ? $app->blog->id : 0,
                 restored => 1,
             }
         )
@@ -59,7 +59,7 @@ sub list_trash {
     my $app = shift;
     $app->forward(
         'list',
-        {   _type   => $app->param('_type'),
+        {   _type   => scalar $app->param('_type'),
             blog_id => $app->blog ? $app->blog->id : 0
         }
     );
