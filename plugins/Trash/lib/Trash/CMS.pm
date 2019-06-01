@@ -7,6 +7,7 @@ sub trash {
 
     require MT::Entry;
     my $save = \&MT::Entry::save;
+    no warnings 'redefine';
     local *MT::Entry::save = sub {
         my $entry = shift;
         $entry->trash(1);
@@ -25,7 +26,7 @@ sub restore_entry {
     $app->setup_filtered_ids
         if $app->param('all_selected');
 
-    my @ids    = $app->param('id');
+    my @ids = $MT::VERSION > 7 ? $app->multi_param('id') : $app->param('id');
     my $author = $app->user;
     require MT::Entry;
     my $iter = MT::Entry->load_iter( { id => \@ids } );
