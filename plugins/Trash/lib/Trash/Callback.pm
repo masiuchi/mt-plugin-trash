@@ -51,7 +51,8 @@ sub tmpl_param_list_common {
     $param->{object_label_plural}
         = $app->component('Trash')->translate("$class_label_plural in Trash");
     if ( $MT::VERSION >= 7 ) {
-        ( $param->{jq_js_include} || '' ) .= <<'__TMPL__';
+        $param->{jq_js_include} ||= '';
+        $param->{jq_js_include} .= <<'__TMPL__';
   ListClient.prototype.filteredList = function (args) {
     if (!args) {
       args = {};
