@@ -70,7 +70,7 @@ sub filtered_list_trash {
     my $app   = shift;
     my $param = $app->param()->{param};
     delete $param->{__mode};
-    $app->forward( 'filtered_list', $param );
+    $app->forward( 'filtered_list', %$param );
 }
 
 1;
