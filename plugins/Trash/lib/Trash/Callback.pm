@@ -37,7 +37,9 @@ sub pre_load_filtered_list_entry {
 sub tmpl_src_list_common {
     my ( $cb, $app, $tmpl_ref ) = @_;
     return unless $app->mode eq 'list_trash';
-    $$tmpl_ref =~ s/filtered_list/filtered_list_trash/g;
+    if ( $MT::VERSION < 7 ) {
+        $$tmpl_ref =~ s/filtered_list/filtered_list_trash/g;
+    }
     $$tmpl_ref =~ s/<mt:if name="listing_footer_content">/<mt:if>/;
 }
 
@@ -48,6 +50,37 @@ sub tmpl_param_list_common {
         = $app->param('_type') eq 'page' ? 'Pages' : 'Entries';
     $param->{object_label_plural}
         = $app->component('Trash')->translate("$class_label_plural in Trash");
+    if ( $MT::VERSION >= 7 ) {
+        ( $param->{jq_js_include} || '' ) .= <<'__TMPL__';
+  ListClient.prototype.filteredList = function (args) {
+    if (!args) {
+      args = {};
+    }
+    var columns;
+    if (Array.isArray(args.columns)) {
+      columns = args.columns.join(',');
+    } else {
+      columns = args.columns;
+    }
+    var data = {
+      __mode: 'filtered_list_trash',
+      blog_id: this.siteId,
+      columns: columns,
+      datasource: this.datasource,
+      items: JSON.stringify(args.filter.items),
+      limit: args.limit,
+      magic_token: this.magicToken,
+      page: args.page,
+      sort_by: args.sortBy,
+      sort_order: args.sortOrder
+    };
+    if (args.filter.id && !args.noFilterId) {
+      data.fid = args.filter.id;
+    }
+    this.sendRequest(args, data);
+  };
+__TMPL__
+    }
 }
 
 sub tmpl_src_entry_list_header {
